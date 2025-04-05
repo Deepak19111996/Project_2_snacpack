@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - SnacPack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles specific to payment confirmation page */
+        .payment-container {
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .payment-header {
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .payment-header h1 {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .payment-steps {
+            display: flex;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .payment-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .payment-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-sm);
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .payment-step.completed .step-number {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+        
+        .payment-step.active .step-number {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .payment-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .confirmation-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .confirmation-icon {
+            width: 100px;
+            height: 100px;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-lg);
+            font-size: 3rem;
+        }
+        
+        .confirmation-message {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .confirmation-message h2 {
+            margin-bottom: var(--spacing-md);
+            color: var(--success-color);
+        }
+        
+        .confirmation-message p {
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .order-details {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: left;
+        }
+        
+        .order-details h3 {
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .order-info-section h4 {
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.1rem;
+        }
+        
+        .order-info-section p {
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-light);
+        }
+        
+        .order-summary {
+            margin-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--spacing-lg);
+        }
+        
+        .order-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .order-summary-row.total {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .order-items {
+            margin-top: var(--spacing-lg);
+        }
+        
+        .order-item {
+            display: flex;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .order-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            margin-right: var(--spacing-md);
+        }
+        
+        .order-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .order-item-details {
+            flex: 1;
+        }
+        
+        .order-item-details h4 {
+            margin-bottom: var(--spacing-xs);
+            font-size: 1rem;
+        }
+        
+        .order-item-price {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .order-item-quantity {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .order-item-total {
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            margin-left: var(--spacing-lg);
+        }
+        
+        .next-steps {
+            margin-top: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .next-steps h3 {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .next-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .next-step {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .next-step-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-light);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            font-size: 1.5rem;
+        }
+        
+        .next-step h4 {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .next-step p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+        
+        @media (max-width: 768px) {
+            .order-info {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .next-steps-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .payment-step:not(:last-child)::after {
+                top: 25px;
+            }
+            
+            .step-label {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Snac<span>Pack</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="checkout.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="payment-container container">
+        <div class="payment-header">
+            <h1>Order Confirmation</h1>
+            <p>Thank you for your order!</p>
+            
+            <div class="payment-steps">
+                <div class="payment-step completed">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Shopping Cart</div>
+                </div>
+                <div class="payment-step completed">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Shipping & Payment</div>
+                </div>
+                <div class="payment-step active">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="confirmation-content">
+            <div class="confirmation-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <div class="confirmation-message">
+                <h2>Your Order Has Been Placed Successfully!</h2>
+                <p>Order #SNP-2025-04-05-1234</p>
+                <p>A confirmation email has been sent to <strong>customer@example.com</strong></p>
+            </div>
+            
+            <div class="order-details">
+                <h3>Order Details</h3>
+                
+                <div class="order-info">
+                    <div class="order-info-section">
+                        <h4>Shipping Information</h4>
+                        <p><strong>John Doe</strong></p>
+                        <p>123 Main Street</p>
+                        <p>Mumbai, Maharashtra 400001</p>
+                        <p>India</p>
+                        <p>Phone: +91 98765 43210</p>
+                    </div>
+                    
+                    <div class="order-info-section">
+                        <h4>Order Information</h4>
+                        <p><strong>Order Date:</strong> May 5, 2025</p>
+                        <p><strong>Order Number:</strong> SNP-2025-04-05-1234</p>
+                        <p><strong>Payment Method:</strong> Credit Card (XXXX-XXXX-XXXX-1234)</p>
+                        <p><strong>Shipping Method:</strong> Standard Shipping (3-5 business days)</p>
+                    </div>
+                </div>
+                
+                <div class="order-items">
+                    <h4>Order Items</h4>
+                    
+                    <div class="order-item">
+                        <div class="order-item-image">
+                            <img src="images/product-1.jpg" alt="Eco-friendly Food Containers">
+                        </div>
+                        <div class="order-item-details">
+                            <h4>Eco-friendly Food Containers</h4>
+                            <div class="order-item-price">₹1,200.00 / 100 pcs</div>
+                            <div class="order-item-quantity">Quantity: 2</div>
+                        </div>
+                        <div class="order-item-total">
+                            ₹2,400.00
+                        </div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <div class="order-item-image">
+                            <img src="images/product-2.jpg" alt="Premium Coffee Cups">
+                        </div>
+                        <div class="order-item-details">
+                            <h4>Premium Coffee Cups</h4>
+                            <div class="order-item-price">₹850.00 / 100 pcs</div>
+                            <div class="order-item-quantity">Quantity: 1</div>
+                        </div>
+                        <div class="order-item-total">
+                            ₹850.00
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="order-summary-row">
+                        <span>Subtotal</span>
+                        <span>₹3,250.00</span>
+                    </div>
+                    <div class="order-summary-row">
+                        <span>Shipping</span>
+                        <span>₹0.00</span>
+                    </div>
+                    <div class="order-summary-row">
+                        <span>Tax (18% GST)</span>
+                        <span>₹585.00</span>
+                    </div>
+                    <div class="order-summary-row total">
+                        <span>Total</span>
+                        <span>₹3,835.00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <h3>What's Next?</h3>
+                
+                <div class="next-steps-grid">
+                    <div class="next-step">
+                        <div class="next-step-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4>Order Confirmation</h4>
+                        <p>You will receive an order confirmation email with details of your order.</p>
+                    </div>
+                    
+                    <div class="next-step">
+                        <div class="next-step-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <h4>Order Processing</h4>
+                        <p>We will process your order and prepare it for shipping within 24 hours.</p>
+                    </div>
+                    
+                    <div class="next-step">
+                        <div class="next-step-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h4>Order Shipping</h4>
+                        <p>Your order will be shipped and you will receive a tracking number via email.</p>
+                    </div>
+                </div>
+                
+                <p>If you have any questions about your order, please contact our customer service team at <strong>support@snacpack.com</strong> or call us at <strong>+91 22 2345 6789</strong>.</p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="index.html" class="btn btn-outline">Back to Home</a>
+                <a href="products.html" class="btn btn-primary">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Snac<span>Pack</span></h2>
+                    <p>Premium food packaging solutions for cafes and restaurants across India.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="products.html#containers">Food Containers</a></li>
+                        <li><a href="products.html#cups">Cups & Lids</a></li>
+                        <li><a href="products.html#bags">Paper Bags</a></li>
+                        <li><a href="products.html#cutlery">Disposable Cutlery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest products and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SnacPack. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clear cart after successful order
+            localStorage.removeItem('snacpack_cart');
+            
+            // Update cart count
+            const cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = '0';
+            }
+            
+            // Get order details from URL parameters (in a real app)
+            // For demo purposes, we're using static content
+            
+            // Back to top button
+            const backToTopBtn = document.querySelector('.back-to-top');
+            
+            if (backToTopBtn) {
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+                
+                backToTopBtn.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

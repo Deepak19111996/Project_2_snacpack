@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SnacPack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles specific to checkout page */
+        .checkout-container {
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .checkout-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .checkout-header h1 {
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .checkout-steps {
+            display: flex;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .checkout-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        
+        .checkout-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-sm);
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .checkout-step.active .step-number {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .checkout-step.completed .step-number {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .checkout-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .checkout-content {
+            display: flex;
+            gap: var(--spacing-xl);
+        }
+        
+        .checkout-main {
+            flex: 2;
+        }
+        
+        .checkout-sidebar {
+            flex: 1;
+        }
+        
+        .cart-items {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .cart-item {
+            display: flex;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--border-radius-sm);
+            overflow: hidden;
+            margin-right: var(--spacing-md);
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-details h3 {
+            margin-bottom: var(--spacing-xs);
+            font-size: 1.1rem;
+        }
+        
+        .cart-item-price {
+            color: var(--text-light);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .quantity-btn:hover {
+            background-color: var(--bg-dark);
+        }
+        
+        .cart-item-quantity span {
+            margin: 0 var(--spacing-sm);
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .cart-item-total {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-left: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+        }
+        
+        .remove-item {
+            position: absolute;
+            top: var(--spacing-md);
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--text-lighter);
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+        
+        .remove-item:hover {
+            color: var(--error-color);
+        }
+        
+        .empty-cart {
+            padding: var(--spacing-xl);
+            text-align: center;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+        }
+        
+        .cart-summary {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .cart-summary-row.total {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            border-bottom: none;
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .promo-code {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .promo-code-form {
+            display: flex;
+        }
+        
+        .promo-code-form input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+        }
+        
+        .promo-code-form button {
+            padding: 0 var(--spacing-md);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .promo-code-form button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .checkout-form {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-section h2 {
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            transition: border-color var(--transition-fast);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .payment-method {
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .payment-method:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .payment-method.active {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 168, 107, 0.05);
+        }
+        
+        .payment-method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .payment-method-radio {
+            margin-right: var(--spacing-sm);
+        }
+        
+        .payment-method-logo {
+            margin-left: auto;
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+        
+        .payment-method-logo i {
+            font-size: 1.5rem;
+        }
+        
+        .payment-method-content {
+            display: none;
+            margin-top: var(--spacing-md);
+        }
+        
+        .payment-method.active .payment-method-content {
+            display: block;
+        }
+        
+        .order-notes {
+            margin-top: var(--spacing-xl);
+        }
+        
+        .order-notes textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .checkout-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+        
+        @media (max-width: 992px) {
+            .checkout-content {
+                flex-direction: column;
+            }
+            
+            .checkout-sidebar {
+                order: -1;
+                margin-bottom: var(--spacing-xl);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .checkout-step:not(:last-child)::after {
+                top: 25px;
+            }
+            
+            .step-label {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Snac<span>Pack</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="checkout.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="checkout-container container">
+        <div class="checkout-header">
+            <h1>Checkout</h1>
+            <p>Review your cart and complete your purchase</p>
+            
+            <div class="checkout-steps">
+                <div class="checkout-step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Shopping Cart</div>
+                </div>
+                <div class="checkout-step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Shipping & Payment</div>
+                </div>
+                <div class="checkout-step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="checkout-content">
+            <div class="checkout-main">
+                <h2>Your Cart</h2>
+                <div class="cart-items">
+                    <!-- Cart items will be dynamically populated by JavaScript -->
+                </div>
+                
+                <div id="checkout-form" class="checkout-form" style="display: none;">
+                    <div class="form-section">
+                        <h2>Shipping Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select id="state" required>
+                                    <option value="">Select State</option>
+                                    <option value="AN">Andaman and Nicobar Islands</option>
+                                    <option value="AP">Andhra Pradesh</option>
+                                    <option value="AR">Arunachal Pradesh</option>
+                                    <option value="AS">Assam</option>
+                                    <option value="BR">Bihar</option>
+                                    <option value="CH">Chandigarh</option>
+                                    <option value="CT">Chhattisgarh</option>
+                                    <option value="DN">Dadra and Nagar Haveli</option>
+                                    <option value="DD">Daman and Diu</option>
+                                    <option value="DL">Delhi</option>
+                                    <option value="GA">Goa</option>
+                                    <option value="GJ">Gujarat</option>
+                                    <option value="HR">Haryana</option>
+                                    <option value="HP">Himachal Pradesh</option>
+                                    <option value="JK">Jammu and Kashmir</option>
+                                    <option value="JH">Jharkhand</option>
+                                    <option value="KA">Karnataka</option>
+                                    <option value="KL">Kerala</option>
+                                    <option value="LA">Ladakh</option>
+                                    <option value="LD">Lakshadweep</option>
+                                    <option value="MP">Madhya Pradesh</option>
+                                    <option value="MH">Maharashtra</option>
+                                    <option value="MN">Manipur</option>
+                                    <option value="ML">Meghalaya</option>
+                                    <option value="MZ">Mizoram</option>
+                                    <option value="NL">Nagaland</option>
+                                    <option value="OR">Odisha</option>
+                                    <option value="PY">Puducherry</option>
+                                    <option value="PB">Punjab</option>
+                                    <option value="RJ">Rajasthan</option>
+                                    <option value="SK">Sikkim</option>
+                                    <option value="TN">Tamil Nadu</option>
+                                    <option value="TG">Telangana</option>
+                                    <option value="TR">Tripura</option>
+                                    <option value="UP">Uttar Pradesh</option>
+                                    <option value="UT">Uttarakhand</option>
+                                    <option value="WB">West Bengal</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pincode">PIN Code</label>
+                                <input type="text" id="pincode" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h2>Payment Method</h2>
+                        <div class="payment-methods">
+                            <div class="payment-method active" data-method="card">
+                                <div class="payment-method-header">
+                                    <input type="radio" name="payment" id="card" class="payment-method-radio" checked>
+                                    <label for="card">Credit/Debit Card</label>
+                                    <div class="payment-method-logo">
+                                        <i class="fab fa-cc-visa"></i>
+                                        <i class="fab fa-cc-mastercard"></i>
+                                        <i class="fab fa-cc-amex"></i>
+                                    </div>
+                                </div>
+                                <div class="payment-method-content">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="cardNumber">Card Number</label>
+                                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="cardName">Name on Card</label>
+                                            <input type="text" id="cardName">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="expiry">Expiry Date</label>
+                                            <input type="text" id="expiry" placeholder="MM/YY">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cvv">CVV</label>
+                                            <input type="text" id="cvv" placeholder="123">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method" data-method="upi">
+                                <div class="payment-method-header">
+                                    <input type="radio" name="payment" id="upi" class="payment-method-radio">
+                                    <label for="upi">UPI</label>
+                                    <div class="payment-method-logo">
+                                        <img src="images/upi-logo.png" alt="UPI" width="30">
+                                    </div>
+                                </div>
+                                <div class="payment-method-content">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="upiId">UPI ID</label>
+                                            <input type="text" id="upiId" placeholder="name@upi">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method" data-method="netbanking">
+                                <div class="payment-method-header">
+                                    <input type="radio" name="payment" id="netbanking" class="payment-method-radio">
+                                    <label for="netbanking">Net Banking</label>
+                                    <div class="payment-method-logo">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                </div>
+                                <div class="payment-method-content">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="bank">Select Bank</label>
+                                            <select id="bank">
+                                                <option value="">Select Bank</option>
+                                                <option value="sbi">State Bank of India</option>
+                                                <option value="hdfc">HDFC Bank</option>
+                                                <option value="icici">ICICI Bank</option>
+                                                <option value="axis">Axis Bank</option>
+                                                <option value="kotak">Kotak Mahindra Bank</option>
+                                                <option value="yes">Yes Bank</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-notes">
+                        <div class="form-group">
+                            <label for="notes">Order Notes (Optional)</label>
+                            <textarea id="notes" placeholder="Special instructions for delivery or any other notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkout-sidebar">
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">₹0.00</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>Tax (18% GST)</span>
+                        <span id="tax">₹0.00</span>
+                    </div>
+                    <div class="cart-summary-row total">
+                        <span>Total</span>
+                        <span id="total">₹0.00</span>
+                    </div>
+                </div>
+                
+                <div class="promo-code">
+                    <h3>Promo Code</h3>
+                    <form class="promo-code-form">
+                        <input type="text" placeholder="Enter promo code">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+                
+                <div id="cart-actions" class="cart-actions">
+                    <a href="products.html" class="btn btn-outline">Continue Shopping</a>
+                    <button id="checkout-btn" class="btn btn-primary">Proceed to Checkout</button>
+                </div>
+                
+                <div id="payment-actions" class="checkout-actions" style="display: none;">
+                    <button id="back-to-cart" class="btn btn-outline">Back to Cart</button>
+                    <button id="place-order" class="btn btn-primary">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Snac<span>Pack</span></h2>
+                    <p>Premium food packaging solutions for cafes and restaurants across India.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="products.html#containers">Food Containers</a></li>
+                        <li><a href="products.html#cups">Cups & Lids</a></li>
+                        <li><a href="products.html#bags">Paper Bags</a></li>
+                        <li><a href="products.html#cutlery">Disposable Cutlery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest products and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SnacPack. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Checkout page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get cart from localStorage
+            let cart = JSON.parse(localStorage.getItem('snacpack_cart')) || [];
+            
+            // Update cart display
+            updateCartDisplay();
+            
+            // Checkout button event listener
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const backToCartBtn = document.getElementById('back-to-cart');
+            const placeOrderBtn = document.getElementById('place-order');
+            
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', function() {
+                    // Show checkout form
+                    document.getElementById('checkout-form').style.display = 'block';
+                    document.getElementById('cart-actions').style.display = 'none';
+                    document.getElementById('payment-actions').style.display = 'flex';
+                    
+                    // Update checkout steps
+                    const steps = document.querySelectorAll('.checkout-step');
+                    steps[0].classList.remove('active');
+                    steps[0].classList.add('completed');
+                    steps[1].classList.add('active');
+                });
+            }
+            
+            if (backToCartBtn) {
+                backToCartBtn.addEventListener('click', function() {
+                    // Hide checkout form
+                    document.getElementById('checkout-form').style.display = 'none';
+                    document.getElementById('cart-actions').style.display = 'flex';
+                    document.getElementById('payment-actions').style.display = 'none';
+                    
+                    // Update checkout steps
+                    const steps = document.querySelectorAll('.checkout-step');
+                    steps[0].classList.add('active');
+                    steps[0].classList.remove('completed');
+                    steps[1].classList.remove('active');
+                });
+            }
+            
+            if (placeOrderBtn) {
+                placeOrderBtn.addEventListener('click', function() {
+                    // Validate form
+                    if (validateForm()) {
+                        // Update checkout steps
+                        const steps = document.querySelectorAll('.checkout-step');
+                        steps[1].classList.remove('active');
+                        steps[1].classList.add('completed');
+                        steps[2].classList.add('active');
+                        
+                        // Redirect to payment confirmation page
+                        window.location.href = 'payment.html';
+                    }
+                });
+            }
+            
+            // Payment method selection
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove active class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+                    
+                    // Add active class to clicked method
+                    this.classList.add('active');
+                    
+                    // Check the radio button
+                    const radio = this.querySelector('.payment-method-radio');
+                    radio.checked = true;
+                });
+            });
+            
+            // Function to update cart display
+            function updateCartDisplay() {
+                const cartItemsContainer = document.querySelector('.cart-items');
+                const subtotalElement = document.getElementById('subtotal');
+                const shippingElement = document.getElementById('shipping');
+                const taxElement = document.getElementById('tax');
+                const totalElement = document.getElementById('total');
+                
+                if (cart.length === 0) {
+                    // Display empty cart message
+                    cartItemsContainer.innerHTML = '<div class="empty-cart"><p>Your cart is empty. <a href="products.html">Continue shopping</a></p></div>';
+                    
+                    // Update summary
+                    subtotalElement.textContent = '₹0.00';
+                    shippingElement.textContent = '₹0.00';
+                    taxElement.textContent = '₹0.00';
+                    totalElement.textContent = '₹0.00';
+                    
+                    // Disable checkout button
+                    if (checkoutBtn) {
+                        checkoutBtn.disabled = true;
+                    }
+                } else {
+                    // Calculate totals
+                    let subtotal = 0;
+                    let cartHTML = '';
+                    
+                    cart.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        subtotal += itemTotal;
+                        
+                        cartHTML += `
+                            <div class="cart-item">
+                                <div class="cart-item-image">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                                <div class="cart-item-details">
+                                    <h3>${item.name}</h3>
+                                    <div class="cart-item-price">₹${item.price.toFixed(2)} / unit</div>
+                                    <div class="cart-item-quantity">
+                                        <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                        <span>${item.quantity}</span>
+                                        <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                                    </div>
+                                </div>
+                                <div class="cart-item-total">
+                                    ₹${itemTotal.toFixed(2)}
+                                </div>
+                                <button class="remove-item" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    // Display cart items
+                    cartItemsContainer.innerHTML = cartHTML;
+                    
+                    // Calculate shipping, tax, and total
+                    const shipping = subtotal > 2000 ? 0 : 200;
+                    const tax = subtotal * 0.18; // 18% GST
+                    const total = subtotal + shipping + tax;
+                    
+                    // Update summary
+                    subtotalElement.textContent = `₹${subtotal.toFixed(2)}`;
+                    shippingElement.textContent = `₹${shipping.toFixed(2)}`;
+                    taxElement.textContent = `₹${tax.toFixed(2)}`;
+                    totalElement.textContent = `₹${total.toFixed(2)}`;
+                    
+                    // Enable checkout button
+                    if (checkoutBtn) {
+                        checkoutBtn.disabled = false;
+                    }
+                    
+                    // Add event listeners for quantity buttons and remove buttons
+                    const decreaseBtns = document.querySelectorAll('.quantity-btn.decrease');
+                    const increaseBtns = document.querySelectorAll('.quantity-btn.increase');
+                    const removeBtns = document.querySelectorAll('.remove-item');
+                    
+                    decreaseBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const productId = this.getAttribute('data-id');
+                            updateCartItemQuantity(productId, -1);
+                        });
+                    });
+                    
+                    increaseBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const productId = this.getAttribute('data-id');
+                            updateCartItemQuantity(productId, 1);
+                        });
+                    });
+                    
+                    removeBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const productId = this.getAttribute('data-id');
+                            removeCartItem(productId);
+                        });
+                    });
+                }
+            }
+            
+            // Function to update cart item quantity
+            function updateCartItemQuantity(productId, change) {
+                const productIndex = cart.findIndex(item => item.id === productId);
+                
+                if (productIndex > -1) {
+                    cart[productIndex].quantity += change;
+                    
+                    // Remove item if quantity is 0 or less
+                    if (cart[productIndex].quantity <= 0) {
+                        cart.splice(productIndex, 1);
+                    }
+                    
+                    // Save cart to localStorage
+                    localStorage.setItem('snacpack_cart', JSON.stringify(cart));
+                    
+                    // Update cart display
+                    updateCartDisplay();
+                }
+            }
+            
+            // Function to remove cart item
+            function removeCartItem(productId) {
+                cart = cart.filter(item => item.id !== productId);
+                
+                // Save cart to localStorage
+                localStorage.setItem('snacpack_cart', JSON.stringify(cart));
+                
+                // Update cart display
+                updateCartDisplay();
+            }
+            
+            // Function to validate form
+            function validateForm() {
+                // Get required fields
+                const requiredFields = [
+                    'firstName',
+                    'lastName',
+                    'email',
+                    'phone',
+                    'address',
+                    'city',
+                    'state',
+                    'pincode'
+                ];
+                
+                let isValid = true;
+                
+                // Check if all required fields are filled
+                requiredFields.forEach(field => {
+                    const input = document.getElementById(field);
+                    
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.classList.add('error');
+                    } else {
+                        input.classList.remove('error');
+                    }
+                });
+                
+                // Check payment method
+                const activePaymentMethod = document.querySelector('.payment-method.active');
+                
+                if (activePaymentMethod) {
+                    const method = activePaymentMethod.getAttribute('data-method');
+                    
+                    if (method === 'card') {
+                        // Validate card details
+                        const cardFields = ['cardNumber', 'cardName', 'expiry', 'cvv'];
+                        
+                        cardFields.forEach(field => {
+                            const input = document.getElementById(field);
+                            
+                            if (!input.value.trim()) {
+                                isValid = false;
+                                input.classList.add('error');
+                            } else {
+                                input.classList.remove('error');
+                            }
+                        });
+                    } else if (method === 'upi') {
+                        // Validate UPI ID
+                        const upiId = document.getElementById('upiId');
+                        
+                        if (!upiId.value.trim()) {
+                            isValid = false;
+                            upiId.classList.add('error');
+                        } else {
+                            upiId.classList.remove('error');
+                        }
+                    } else if (method === 'netbanking') {
+                        // Validate bank selection
+                        const bank = document.getElementById('bank');
+                        
+                        if (!bank.value) {
+                            isValid = false;
+                            bank.classList.add('error');
+                        } else {
+                            bank.classList.remove('error');
+                        }
+                    }
+                }
+                
+                return isValid;
+            }
+        });
+    </script>

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SnacPack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles specific to about page */
+        .about-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/about-header.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: var(--spacing-xxl) 0;
+            text-align: center;
+        }
+        
+        .about-header h1 {
+            color: white;
+            margin-bottom: var(--spacing-md);
+            font-size: 2.5rem;
+        }
+        
+        .about-header p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        .about-section {
+            padding: var(--spacing-xxl) 0;
+        }
+        
+        .about-section:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h2 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .about-text p {
+            margin-bottom: var(--spacing-md);
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+        
+        .mission-values {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .mission-value-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: transform var(--transition-normal);
+        }
+        
+        .mission-value-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .mission-value-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-light);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-md);
+            font-size: 1.8rem;
+        }
+        
+        .mission-value-card h3 {
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+        
+        .mission-value-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: var(--spacing-xl) auto 0;
+            padding: 0 var(--spacing-lg);
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--primary-light);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 0 var(--spacing-lg) var(--spacing-xl);
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            top: 0;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        
+        .timeline-content h3 {
+            margin-bottom: var(--spacing-xs);
+            color: var(--primary-color);
+        }
+        
+        .timeline-date {
+            color: var(--text-lighter);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .timeline-content p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        
+        .team-section {
+            text-align: center;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+        
+        .team-member {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform var(--transition-normal);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-member-image {
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .team-member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+        
+        .team-member:hover .team-member-image img {
+            transform: scale(1.05);
+        }
+        
+        .team-member-info {
+            padding: var(--spacing-md);
+        }
+        
+        .team-member-info h3 {
+            margin-bottom: var(--spacing-xs);
+            font-size: 1.2rem;
+        }
+        
+        .team-member-position {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .team-member-bio {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .team-member-social {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .team-member-social a {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .team-member-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .stats-section {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .stat-item h3 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-xs);
+            color: white;
+        }
+        
+        .stat-item p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .partners-section {
+            text-align: center;
+        }
+        
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            align-items: center;
+        }
+        
+        .partner-logo {
+            padding: var(--spacing-md);
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all var(--transition-normal);
+        }
+        
+        .partner-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+        
+        .partner-logo img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .cta-section {
+            text-align: center;
+            background-color: var(--bg-light);
+            padding: var(--spacing-xxl) 0;
+            margin-top: var(--spacing-xxl);
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            margin-bottom: var(--spacing-md);
+            font-size: 2rem;
+        }
+        
+        .cta-content p {
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+        
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                margin-bottom: var(--spacing-lg);
+            }
+            
+            .mission-values {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-xl) var(--spacing-lg);
+            }
+            
+            .partners-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-item:nth-child(odd)::after {
+                right: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mission-values {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .partners-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Snac<span>Pack</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="checkout.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="about-header">
+        <div class="container">
+            <h1>About SnacPack</h1>
+            <p>We're on a mission to revolutionize food packaging in India with sustainable, high-quality solutions that benefit businesses, customers, and the environment.</p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="images/about-story.jpg" alt="Our Story">
+                </div>
+                <div class="about-text">
+                    <h2>Our Story</h2>
+                    <p>SnacPack was founded in 2020 by a team of entrepreneurs who saw a growing need for sustainable food packaging solutions in India's rapidly expanding food service industry. What began as a small operation in Mumbai has now grown into a nationwide supplier of premium eco-friendly packaging products.</p>
+                    <p>Our journey started when we noticed the environmental impact of traditional plastic packaging used by restaurants and cafes across the country. We believed there had to be a better way to serve food that didn't compromise on quality or harm the planet.</p>
+                    <p>After extensive research and development, we launched our first line of bagasse food containers, which quickly gained popularity among environmentally conscious businesses. Since then, we've expanded our product range to include a comprehensive selection of sustainable packaging solutions for all food service needs.</p>
+                    <p>Today, SnacPack serves thousands of businesses across India, from small local cafes to large restaurant chains, all united by a commitment to quality and sustainability.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">Our Mission & Values</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto var(--spacing-xl);">At SnacPack, we're guided by a clear mission and strong core values that shape everything we do. Our commitment to sustainability, quality, and innovation drives us to create packaging solutions that make a positive impact.</p>
+            
+            <div class="mission-values">
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Sustainability</h3>
+                    <p>We're committed to reducing environmental impact through biodegradable and compostable packaging solutions that minimize waste and pollution.</p>
+                </div>
+                
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Quality</h3>
+                    <p>We never compromise on quality, ensuring that our products meet the highest standards for durability, safety, and performance.</p>
+                </div>
+                
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Innovation</h3>
+                    <p>We continuously research and develop new materials and designs to stay at the forefront of sustainable packaging technology.</p>
+                </div>
+                
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Partnership</h3>
+                    <p>We build strong relationships with our customers, suppliers, and communities, working together toward shared sustainability goals.</p>
+                </div>
+                
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <h3>Local Impact</h3>
+                    <p>We support local economies by sourcing materials from Indian suppliers and creating jobs in our manufacturing facilities.</p>
+                </div>
+                
+                <div class="mission-value-card">
+                    <div class="mission-value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Customer Focus</h3>
+                    <p>We listen to our customers' needs and provide personalized solutions that help their businesses thrive while reducing environmental impact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <h2 class="section-title">Our Journey</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto var(--spacing-xl);">From a small startup to a leading sustainable packaging provider in India, our journey has been marked by continuous growth, innovation, and impact.</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>The Beginning</h3>
+                        <div class="timeline-date">2020</div>
+                        <p>SnacPack was founded in Mumbai with a mission to provide sustainable alternatives to plastic food packaging. We launched our first line of bagasse food containers.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Expansion to Delhi & Bangalore</h3>
+                        <div class="timeline-date">2021</div>
+                        <p>We opened distribution centers in Delhi and Bangalore to better serve customers across India. Our product range expanded to include cups, lids, and cutlery.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Manufacturing Facility</h3>
+                        <div class="timeline-date">2022</div>
+                        <p>We established our first manufacturing facility in Gujarat, allowing us to control quality and reduce costs while creating local jobs.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Custom Branding Launch</h3>
+                        <div class="timeline-date">2023</div>
+                        <p>We introduced custom branding services, enabling businesses to showcase their brand identity on our sustainable packaging products.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Nationwide Presence</h3>
+                        <div class="timeline-date">2024</div>
+                        <p>SnacPack expanded to serve all major cities across India with a network of distribution centers and a comprehensive e-commerce platform.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Innovation Hub</h3>
+                        <div class="timeline-date">2025</div>
+                        <p>We launched our Innovation Hub in Pune, dedicated to researching and developing next-generation sustainable packaging materials and designs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <h2>Our Impact in Numbers</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>5000+</h3>
+                    <p>Business Customers</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>25M+</h3>
+                    <p>Plastic Containers Replaced</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Team Members</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>15+</h3>
+                    <p>Cities Served</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section team-section">
+        <div class="container">
+            <h2 class="section-title">Meet Our Leadership Team</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto var(--spacing-xl);">Our diverse team brings together expertise in sustainability, manufacturing, design, and business to create innovative packaging solutions.</p>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-member-image">
+                        <img src="images/team-1.jpg" alt="Rajiv Mehta">
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Rajiv Mehta</h3>
+                        <div class="team-member-position">Founder & CEO</div>
+                        <p class="team-member-bio">With over 15 years of experience in sustainable materials, Rajiv leads our vision and strategy with passion and expertise.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-member-image">
+                        <img src="images/team-2.jpg" alt="Priya Sharma">
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Priya Sharma</h3>
+                        <div class="team-member-position">Chief Operations Officer</div>
+                        <p class="team-member-bio">Priya oversees our manufacturing and distribution operations, ensuring efficiency and quality across all processes.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-member-image">
+                        <img src="images/team-3.jpg" alt="Arjun Patel">
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Arjun Patel</h3>
+                        <div class="team-member-position">Head of Innovation</div>
+                        <p class="team-member-bio">Arjun leads our R&D team, constantly exploring new materials and designs to advance sustainable packaging.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-member-image">
+                        <img src="images/team-4.jpg" alt="Meera Reddy">
+                    </div>
+                    <div class="team-member-info">
+                        <h3>Meera Reddy</h3>
+                        <div class="team-member-position">Chief Marketing Officer</div>
+                        <p class="team-member-bio">Meera drives our brand strategy and customer engagement, helping businesses understand the value of sustainable packaging.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section partners-section">
+        <div class="container">
+            <h2 class="section-title">Our Partners & Clients</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto var(--spacing-xl);">We're proud to work with leading businesses across India who share our commitment to sustainability and quality.</p>
+            
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <img src="images/partner-1.png" alt="Partner 1">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-2.png" alt="Partner 2">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-3.png" alt="Partner 3">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-4.png" alt="Partner 4">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-5.png" alt="Partner 5">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-6.png" alt="Partner 6">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-7.png" alt="Partner 7">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-8.png" alt="Partner 8">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-9.png" alt="Partner 9">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partner-10.png" alt="Partner 10">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Join the Sustainable Packaging Movement</h2>
+                <p>Ready to make the switch to eco-friendly food packaging for your business? Explore our products or contact our team to discuss custom solutions tailored to your needs.</p>
+                <div class="cta-buttons">
+                    <a href="products.html" class="btn btn-primary">Explore Products</a>
+                    <a href="index.html#contact" class="btn btn-outline">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Snac<span>Pack</span></h2>
+                    <p>Premium food packaging solutions for cafes and restaurants across India.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="products.html#containers">Food Containers</a></li>
+                        <li><a href="products.html#cups">Cups & Lids</a></li>
+                        <li><a href="products.html#bags">Paper Bags</a></li>
+                        <li><a href="products.html#cutlery">Disposable Cutlery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest products and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SnacPack. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

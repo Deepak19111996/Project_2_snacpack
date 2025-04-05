@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - SnacPack</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles specific to products page */
+        .products-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('images/products-header.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+        
+        .products-header h1 {
+            color: white;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .products-container {
+            display: flex;
+            padding: var(--spacing-xl) 0;
+        }
+        
+        .products-sidebar {
+            width: 250px;
+            margin-right: var(--spacing-xl);
+        }
+        
+        .products-main {
+            flex: 1;
+        }
+        
+        .filter-section {
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--spacing-md);
+        }
+        
+        .filter-section h3 {
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.1rem;
+        }
+        
+        .filter-options label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            cursor: pointer;
+        }
+        
+        .filter-options input[type="checkbox"] {
+            margin-right: var(--spacing-xs);
+        }
+        
+        .price-range {
+            display: flex;
+            align-items: center;
+            margin-top: var(--spacing-sm);
+        }
+        
+        .price-range input {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .price-range span {
+            margin: 0 var(--spacing-xs);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+        }
+        
+        .products-header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .products-count {
+            color: var(--text-light);
+        }
+        
+        .sort-by select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            background-color: white;
+        }
+        
+        .product-categories {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: var(--spacing-md);
+        }
+        
+        .category-tab {
+            padding: 0.5rem 1rem;
+            margin-right: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .category-tab:hover:not(.active) {
+            background-color: var(--bg-dark);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-xl);
+        }
+        
+        .pagination a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 var(--spacing-xs);
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            transition: all var(--transition-fast);
+        }
+        
+        .pagination a:hover,
+        .pagination a.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .products-container {
+                flex-direction: column;
+            }
+            
+            .products-sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: var(--spacing-lg);
+            }
+            
+            .filter-toggle {
+                display: block;
+                width: 100%;
+                padding: var(--spacing-sm);
+                background-color: var(--primary-color);
+                color: white;
+                border-radius: var(--border-radius-sm);
+                text-align: center;
+                margin-bottom: var(--spacing-md);
+            }
+            
+            .filter-content {
+                display: none;
+            }
+            
+            .filter-content.show {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-header-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .sort-by {
+                margin-top: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Snac<span>Pack</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html" class="active">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="checkout.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="products-header">
+        <div class="container">
+            <h1>Our Products</h1>
+            <p>Explore our range of premium food packaging solutions for cafes and restaurants</p>
+        </div>
+    </section>
+
+    <section class="products-container container">
+        <aside class="products-sidebar">
+            <button class="filter-toggle">
+                <i class="fas fa-filter"></i> Filter Products
+            </button>
+            
+            <div class="filter-content">
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <div class="filter-options">
+                        <label>
+                            <input type="checkbox" name="category" value="containers" checked> Food Containers
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="cups" checked> Cups & Lids
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="bags" checked> Paper Bags
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="cutlery" checked> Disposable Cutlery
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="napkins" checked> Napkins & Tissues
+                        </label>
+                        <label>
+                            <input type="checkbox" name="category" value="packaging" checked> Packaging Accessories
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Material</h3>
+                    <div class="filter-options">
+                        <label>
+                            <input type="checkbox" name="material" value="paper" checked> Paper
+                        </label>
+                        <label>
+                            <input type="checkbox" name="material" value="plastic" checked> Plastic
+                        </label>
+                        <label>
+                            <input type="checkbox" name="material" value="bagasse" checked> Bagasse
+                        </label>
+                        <label>
+                            <input type="checkbox" name="material" value="bamboo" checked> Bamboo
+                        </label>
+                        <label>
+                            <input type="checkbox" name="material" value="cornstarch" checked> Cornstarch
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Eco-Friendly</h3>
+                    <div class="filter-options">
+                        <label>
+                            <input type="checkbox" name="eco" value="biodegradable" checked> Biodegradable
+                        </label>
+                        <label>
+                            <input type="checkbox" name="eco" value="compostable" checked> Compostable
+                        </label>
+                        <label>
+                            <input type="checkbox" name="eco" value="recyclable" checked> Recyclable
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h3>Price Range (₹)</h3>
+                    <div class="price-range">
+                        <input type="number" id="min-price" placeholder="Min" min="0">
+                        <span>to</span>
+                        <input type="number" id="max-price" placeholder="Max" min="0">
+                    </div>
+                    <button class="btn btn-outline" style="margin-top: 10px; width: 100%;">Apply</button>
+                </div>
+            </div>
+        </aside>
+        
+        <div class="products-main">
+            <div class="products-header-controls">
+                <div class="products-count">
+                    Showing <span id="products-count">12</span> products
+                </div>
+                <div class="sort-by">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort">
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="product-categories">
+                <div class="category-tab active" data-category="all">All Products</div>
+                <div class="category-tab" data-category="containers">Food Containers</div>
+                <div class="category-tab" data-category="cups">Cups & Lids</div>
+                <div class="category-tab" data-category="bags">Paper Bags</div>
+                <div class="category-tab" data-category="cutlery">Disposable Cutlery</div>
+                <div class="category-tab" data-category="napkins">Napkins & Tissues</div>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Food Containers -->
+                <div class="product-card" data-category="containers" data-material="bagasse" data-eco="biodegradable,compostable">
+                    <div class="product-image">
+                        <img src="images/product-1.jpg" alt="Eco-friendly Food Containers">
+                        <div class="product-tag">Bestseller</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Eco-friendly Food Containers</h3>
+                        <p class="product-description">Biodegradable containers perfect for takeaway meals.</p>
+                        <div class="product-price">
+                            <span class="price">₹1,200</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=1" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="containers" data-material="bagasse" data-eco="biodegradable,compostable">
+                    <div class="product-image">
+                        <img src="images/product-5.jpg" alt="Compartment Food Trays">
+                    </div>
+                    <div class="product-info">
+                        <h3>Compartment Food Trays</h3>
+                        <p class="product-description">3-compartment bagasse trays for meal service.</p>
+                        <div class="product-price">
+                            <span class="price">₹1,500</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=5" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="containers" data-material="plastic" data-eco="recyclable">
+                    <div class="product-image">
+                        <img src="images/product-9.jpg" alt="Transparent Food Containers">
+                    </div>
+                    <div class="product-info">
+                        <h3>Transparent Food Containers</h3>
+                        <p class="product-description">Clear containers with secure lids for visibility.</p>
+                        <div class="product-price">
+                            <span class="price">₹950</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=9" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Cups & Lids -->
+                <div class="product-card" data-category="cups" data-material="paper" data-eco="recyclable">
+                    <div class="product-image">
+                        <img src="images/product-2.jpg" alt="Premium Coffee Cups">
+                        <div class="product-tag">New</div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Premium Coffee Cups</h3>
+                        <p class="product-description">Double-walled paper cups with lids for hot beverages.</p>
+                        <div class="product-price">
+                            <span class="price">₹850</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=2" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="cups" data-material="plastic" data-eco="recyclable">
+                    <div class="product-image">
+                        <img src="images/product-6.jpg" alt="Cold Drink Cups">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cold Drink Cups</h3>
+                        <p class="product-description">Clear PET cups for cold beverages with dome lids.</p>
+                        <div class="product-price">
+                            <span class="price">₹750</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=6" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="cups" data-material="paper" data-eco="recyclable">
+                    <div class="product-image">
+                        <img src="images/product-10.jpg" alt="Ripple Wall Cups">
+                    </div>
+                    <div class="product-info">
+                        <h3>Ripple Wall Cups</h3>
+                        <p class="product-description">Insulated ripple wall cups for hot beverages.</p>
+                        <div class="product-price">
+                            <span class="price">₹1,100</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=10" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Paper Bags -->
+                <div class="product-card" data-category="bags" data-material="paper" data-eco="recyclable,biodegradable">
+                    <div class="product-image">
+                        <img src="images/product-3.jpg" alt="Kraft Paper Bags">
+                    </div>
+                    <div class="product-info">
+                        <h3>Kraft Paper Bags</h3>
+                        <p class="product-description">Sturdy paper bags with handles for takeaway orders.</p>
+                        <div class="product-price">
+                            <span class="price">₹950</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=3" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="bags" data-material="paper" data-eco="recyclable,biodegradable">
+                    <div class="product-image">
+                        <img src="images/product-7.jpg" alt="Branded Paper Bags">
+                    </div>
+                    <div class="product-info">
+                        <h3>Branded Paper Bags</h3>
+                        <p class="product-description">Custom printed paper bags with your logo.</p>
+                        <div class="product-price">
+                            <span class="price">₹1,800</span>
+                            <span class="unit">/ 100 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=7" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Cutlery -->
+                <div class="product-card" data-category="cutlery" data-material="cornstarch" data-eco="biodegradable,compostable">
+                    <div class="product-image">
+                        <img src="images/product-4.jpg" alt="Disposable Cutlery Set">
+                    </div>
+                    <div class="product-info">
+                        <h3>Disposable Cutlery Set</h3>
+                        <p class="product-description">Eco-friendly cutlery sets for takeaway orders.</p>
+                        <div class="product-price">
+                            <span class="price">₹600</span>
+                            <span class="unit">/ 100 sets</span>
+                        </div>
+                        <a href="product-details.html?id=4" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="cutlery" data-material="bamboo" data-eco="biodegradable,compostable">
+                    <div class="product-image">
+                        <img src="images/product-8.jpg" alt="Bamboo Cutlery">
+                    </div>
+                    <div class="product-info">
+                        <h3>Bamboo Cutlery</h3>
+                        <p class="product-description">Premium bamboo cutlery for an eco-friendly option.</p>
+                        <div class="product-price">
+                            <span class="price">₹1,200</span>
+                            <span class="unit">/ 100 sets</span>
+                        </div>
+                        <a href="product-details.html?id=8" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <!-- Napkins -->
+                <div class="product-card" data-category="napkins" data-material="paper" data-eco="biodegradable">
+                    <div class="product-image">
+                        <img src="images/product-11.jpg" alt="Eco-Friendly Napkins">
+                    </div>
+                    <div class="product-info">
+                        <h3>Eco-Friendly Napkins</h3>
+                        <p class="product-description">Soft, absorbent napkins made from recycled paper.</p>
+                        <div class="product-price">
+                            <span class="price">₹450</span>
+                            <span class="unit">/ 500 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=11" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="napkins" data-material="paper" data-eco="biodegradable">
+                    <div class="product-image">
+                        <img src="images/product-12.jpg" alt="Premium Dinner Napkins">
+                    </div>
+                    <div class="product-info">
+                        <h3>Premium Dinner Napkins</h3>
+                        <p class="product-description">High-quality dinner napkins for restaurants.</p>
+                        <div class="product-price">
+                            <span class="price">₹750</span>
+                            <span class="unit">/ 500 pcs</span>
+                        </div>
+                        <a href="product-details.html?id=12" class="btn btn-outline">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pagination">
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#"><i class="fas fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Need Custom Packaging Solutions?</h2>
+                <p>Contact our team for personalized packaging solutions tailored to your business needs.</p>
+                <a href="index.html#contact" class="btn btn-primary">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>Snac<span>Pack</span></h2>
+                    <p>Premium food packaging solutions for cafes and restaurants across India.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Products</h3>
+                    <ul>
+                        <li><a href="products.html#containers">Food Containers</a></li>
+                        <li><a href="products.html#cups">Cups & Lids</a></li>
+                        <li><a href="products.html#bags">Paper Bags</a></li>
+                        <li><a href="products.html#cutlery">Disposable Cutlery</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for the latest products and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SnacPack. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Products page specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter toggle for mobile
+            const filterToggle = document.querySelector('.filter-toggle');
+            const filterContent = document.querySelector('.filter-content');
+            
+            if (filterToggle && filterContent) {
+                filterToggle.addEventListener('click', function() {
+                    filterContent.classList.toggle('show');
+                });
+            }
+            
+            // Category tabs
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const productCards = document.querySelectorAll('.product-card');
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Show/hide products based on category
+                    productCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    // Update product count
+                    updateProductCount();
+                });
+            });
+            
+            // Filter functionality
+            const filterCheckboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+            
+            filterCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+            
+            // Price range filter
+            const priceFilterBtn = document.querySelector('.filter-section .btn');
+            
+            if (priceFilterBtn) {
+                priceFilterBtn.addEventListener('click', applyFilters);
+            }
+            
+            // Sort functionality
+            const sortSelect = document.getElementById('sort');
+            
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    const sortValue = this.value;
+                    sortProducts(sortValue);
+                });
+            }
+            
+            // Function to apply filters
+            function applyFilters() {
+                // Get selected categories
+                const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(el => el.value);
+                
+                // Get selected materials
+                const selectedMaterials = Array.from(document.querySelectorAll('input[name="material"]:checked')).map(el => el.value);
+                
+                // Get selected eco options
+                const selectedEco = Array.from(document.querySelectorAll('input[name="eco"]:checked')).map(el => el.value);
+                
+                // Get price range
+                const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
+                const maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
+                
+                // Filter products
+                productCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    const material = card.getAttribute('data-material');
+                    const eco = card.getAttribute('data-eco').split(',');
+                    const price = parseFloat(card.querySelector('.price').textContent.replace('₹', '').replace(',', ''));
+                    
+                    const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
+                    const materialMatch = selectedMaterials.length === 0 || selectedMaterials.includes(material);
+                    const ecoMatch = selectedEco.length === 0 || selectedEco.some(e => eco.includes(e));
+                    const priceMatch = price >= minPrice && price <= maxPrice;
+                    
+                    if (categoryMatch && materialMatch && ecoMatch && priceMatch) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Update product count
+                updateProductCount();
+            }
+            
+            // Function to sort products
+            function sortProducts(sortValue) {
+                const productsGrid = document.querySelector('.products-grid');
+                const products = Array.from(productsGrid.children);
+                
+                products.sort((a, b) => {
+                    if (sortValue === 'price-low') {
+                        const priceA = parseFloat(a.querySelector('.price').textContent.replace('₹', '').replace(',', ''));
+                        const priceB = parseFloat(b.querySelector('.price').textContent.replace('₹', '').replace(',', ''));
+                        return priceA - priceB;
+                    } else if (sortValue === 'price-high') {
+                        const priceA = parseFloat(a.querySelector('.price').textContent.replace('₹', '').replace(',', ''));
+                        const priceB = parseFloat(b.querySelector('.price').textContent.replace('₹', '').replace(',', ''));
+                        return priceB - priceA;
+                    }
+                    
+                    // Default: sort by popularity (original order)
+                    return 0;
+                });
+                
+                // Re-append sorted products
+                products.forEach(product => {
+                    productsGrid.appendChild(product);
+                });
+            }
+            
+            // Function to update product count
+            function updateProductCount() {
+                const visibleProducts = document.querySelectorAll('.product-card[style="display: block"]').length;
+                document.getElementById('products-count').textContent = visibleProducts;
+            }
+            
+            // Initialize product count
+            updateProductCount();
+        });
+    </script>
